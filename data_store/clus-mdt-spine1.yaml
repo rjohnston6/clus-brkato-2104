@@ -1,0 +1,29 @@
+bgp_address_family: {as_number: '65001'}
+bgp_global:
+  as_number: '65001'
+  neighbors:
+  - {neighbor_address: 100.64.0.11, remote_as: '65001', update_source: loopback0}
+  - {neighbor_address: 100.64.0.12, remote_as: '65001', update_source: loopback0}
+  - {neighbor_address: 100.64.0.13, remote_as: '65001', update_source: loopback0}
+  router_id: 100.64.0.1
+bgp_neighbor_address_family:
+  as_number: '65001'
+  neighbors:
+  - address_family:
+    - afi: l2vpn
+      route_reflector_client: true
+      safi: evpn
+      send_community: {extended: true, standard: true}
+    neighbor_address: 100.64.0.11
+  - address_family:
+    - afi: l2vpn
+      route_reflector_client: true
+      safi: evpn
+      send_community: {extended: true, standard: true}
+    neighbor_address: 100.64.0.12
+  - address_family:
+    - afi: l2vpn
+      route_reflector_client: true
+      safi: evpn
+      send_community: {extended: true, standard: true}
+    neighbor_address: 100.64.0.13

@@ -1,0 +1,18 @@
+[spine]
+clus-mdt-spine1 ansible_host=172.22.225.20
+
+[leaf]
+clus-mdt-leaf1 ansible_host=172.22.225.21
+clus-mdt-leaf2 ansible_host=172.22.225.22
+clus-mdt-leaf3 ansible_host=172.22.225.23
+
+[core]
+clus-mdt-core1 ansible_host=172.22.225.24
+clus-mdt-core2 ansible_host=172.22.225.25
+
+[all:vars]
+ansible_user=cisco
+ansible_password=cisco
+ansible_network_os=cisco.nxos.nxos
+ansible_connection=ansible.netcommon.network_cli
+ansible_python_interpreter=python

@@ -1,0 +1,8 @@
+---
+- name: Get NX-OS version
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather NX-OS version information
+      cisco.nxos.nxos_command:
+        commands: show version

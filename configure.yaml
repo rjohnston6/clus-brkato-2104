@@ -1,0 +1,30 @@
+---
+- hosts: all 
+  gather_facts: false
+  tasks:
+    - name: Retrieve source-of-truth from remote repository
+      ansible.scm.git_here:
+        origin:
+          url: https://github.com/NilashishC/data_store.git
+      register: result
+      changed_when: false
+
+    - name: Load variables
+      ansible.builtin.include_vars:
+        file: "{{ result.path }}/{{ inventory_hostname }}.yaml"
+
+    - name: "NX-OS - Configure BGP"
+      cisco.nxos.nxos_bgp_global:
+        config: "{{ bgp_global }}"
+        state: replaced
+
+    - name: "NX-OS - Configure BGP Address Family"
+      cisco.nxos.nxos_bgp_address_family:
+        config: "{{ bgp_address_family }}"
+        state: overridden
+
+    - name: "NX-OS - Configure BGP Neighbor AF"
+      cisco.nxos.nxos_bgp_neighbor_address_family:
+        config: "{{ bgp_neighbor_address_family }}"
+        state: replaced
+

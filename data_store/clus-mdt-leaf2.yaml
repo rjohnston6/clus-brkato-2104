@@ -1,0 +1,67 @@
+bgp_address_family:
+  address_family:
+  - advertise_l2vpn_evpn: true
+    afi: ipv4
+    maximum_paths:
+      ibgp: {parallel_paths: 2}
+      parallel_paths: 2
+    networks:
+    - {prefix: 0.0.0.0/0}
+    safi: unicast
+    vrf: prod
+  as_number: '65001'
+bgp_global:
+  as_number: '65001'
+  neighbors:
+  - {neighbor_address: 100.64.0.1, remote_as: '65001', update_source: loopback0}
+  router_id: 100.64.0.12
+  vrfs:
+  - neighbors:
+    - {neighbor_address: 172.16.1.1, remote_as: '65010'}
+    - {neighbor_address: 172.16.1.11, remote_as: '65010'}
+    - {neighbor_address: 172.16.1.3, remote_as: '65010'}
+    - {neighbor_address: 172.16.1.5, remote_as: '65010'}
+    - {neighbor_address: 172.16.1.7, remote_as: '65010'}
+    - {neighbor_address: 172.16.1.9, remote_as: '65010'}
+    vrf: prod
+bgp_neighbor_address_family:
+  as_number: '65001'
+  neighbors:
+  - address_family:
+    - afi: l2vpn
+      safi: evpn
+      send_community: {extended: true, standard: true}
+    neighbor_address: 100.64.0.1
+  vrfs:
+  - neighbors:
+    - address_family:
+      - afi: ipv4
+        route_map: {outbound: EXTCON-RMAP-FILTER}
+        safi: unicast
+      neighbor_address: 172.16.1.1
+    - address_family:
+      - afi: ipv4
+        route_map: {outbound: EXTCON-RMAP-FILTER}
+        safi: unicast
+      neighbor_address: 172.16.1.11
+    - address_family:
+      - afi: ipv4
+        route_map: {outbound: EXTCON-RMAP-FILTER}
+        safi: unicast
+      neighbor_address: 172.16.1.3
+    - address_family:
+      - afi: ipv4
+        route_map: {outbound: EXTCON-RMAP-FILTER}
+        safi: unicast
+      neighbor_address: 172.16.1.5
+    - address_family:
+      - afi: ipv4
+        route_map: {outbound: EXTCON-RMAP-FILTER}
+        safi: unicast
+      neighbor_address: 172.16.1.7
+    - address_family:
+      - afi: ipv4
+        route_map: {outbound: EXTCON-RMAP-FILTER}
+        safi: unicast
+      neighbor_address: 172.16.1.9
+    vrf: prod

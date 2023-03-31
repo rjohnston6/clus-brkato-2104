@@ -1,0 +1,14 @@
+---
+- name: Automated Remediation of BGP neighbor
+  hosts: all
+  sources:
+    - ansible.eda.kafka:
+        host: 172.22.225.11
+        topic: eda
+        port: 9092
+  rules:
+    - name: test-1
+      condition: event.fields is search("IDLE", ignore_case=false)
+      actions:
+        - run_playbook:
+            name: configure.yaml

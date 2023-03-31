@@ -1,0 +1,18 @@
+---
+- name: Gather facts from topology
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: "Gather existing facts from a Brownfield Environment"
+      cisco.nxos.nxos_facts:
+        gather_network_resources:
+          - bgp_global
+          - bgp_address_family
+          - bgp_neighbor_address_family
+      when: ansible_network_os == "cisco.nxos.nxos"
+
+    - name: "Store gathered facts in a flat file - SoT"
+      ansible.builtin.copy:
+        content: "{{ ansible_network_resources | to_yaml }}"
+        dest: "{{ playbook_dir }}/host_vars/{{ inventory_hostname }}.yaml"
+        mode: "0600"
