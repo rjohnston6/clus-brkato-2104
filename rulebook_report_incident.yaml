@@ -1,0 +1,18 @@
+---
+- name: Report incident to ServiceNow
+  hosts: clus-mdt-leaf1
+  sources:
+    - ansible.eda.kafka:
+        host: 172.22.225.11
+        topic: eda
+        port: 9092
+  rules:
+    - name: Check route count
+      condition: 
+        all:
+          - event.fields.routeCount < 100
+          - event.tags.vrfName == "prod"
+      actions: 
+        - run_playbook:
+            name: report_event.yaml
+
