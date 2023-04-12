@@ -1,0 +1,70 @@
+---
+- hosts: clus-mdt-leaf1
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        msg: "### start gathering information to report detected event ###"
+    
+    - name: "Gather NX-OS version information from affected host"
+      cisco.nxos.nxos_command:
+        commands: show version
+      register: version
+    
+    - name: "Retrieve source-of-truth from remote repository"
+      ansible.scm.git_here:
+        origin:
+          url: https://github.com/rjohnston6/clus-brkato-2104
+          token: "{{ lookup('env', 'GH_TOKEN') }}"
+      register: result
+      changed_when: false
+
+    - name: "Get golden route table entries from SCM"
+      ansible.builtin.set_fact:
+        before: "{{ lookup('file', '{{ result.path }}/data_store/{{ inventory_hostname }}_route.yaml') | from_yaml }}"
+        
+    - name: "Run command and parse with pyats"
+      ansible.utils.cli_parse:
+        command: "show bgp vrf prod ipv4 unicast"
+        parser:
+          name: ansible.netcommon.pyats
+      register: ip_route
+
+    - name: "Get missing route table entries"
+      ansible.utils.fact_diff:
+        before: "{{ before | ansible.utils.to_paths }}"
+        after: "{{ ip_route['parsed'] | ansible.utils.to_paths }}"
+      register: missing_routes
+    
+    - name: "Dump gathered information to files"
+      ansible.builtin.copy:
+        content: "{{ item.data }}"
+        dest: "/tmp/{{ item.name }}.txt"
+      loop:
+        - data: "{{ version.stdout[0] }}"
+          name: "show_version"
+        - data: "{{ missing_routes.diff_lines }}"
+          name: "missing_routes"
+      register: result
+
+    - name: "Create SNOW Incident"
+      servicenow.itsm.incident:
+        state: new
+        short_description: "Missing routes from route table for host {{ inventory_hostname }}"
+        attachments:
+          - name: "show_version.txt"
+            path: "/tmp/show_version.txt"
+
+          - name: "missing_routes.txt"
+            path: "/tmp/missing_routes.txt"
+    
+    - name: "Cleanup files"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/show_version.txt
+        - /tmp/missing_routes.txt
+    
+    - ansible.builtin.debug:
+        msg: "### Incident reported ###"
+
