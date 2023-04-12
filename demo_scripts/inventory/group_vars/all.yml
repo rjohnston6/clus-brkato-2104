@@ -1,0 +1,7 @@
+---
+ansible_user: automation
+ansible_password: '{{ lookup("env", "ANSIBLE_PASSWORD") }}'
+ansible_network_os: cisco.nxos.nxos
+ansible_connection: ansible.netcommon.httpapi
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: false

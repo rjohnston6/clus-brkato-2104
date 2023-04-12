@@ -1,0 +1,19 @@
+---
+- name: Influence External Advertised Routes
+  hosts: core
+  gather_facts: false
+
+  vars:
+    if_range: "{{ range(100,110) }}"
+    if_enabled: yes
+
+  tasks:
+    - name: Create Interface Config Snippet
+      set_fact:
+        if_config: "{{ if_config|default([]) + [{'name': 'loopback%s' | format(item), 'enabled': '{{ if_enabled }}'}] }}"
+      loop: "{{ if_range | list }}"
+
+    - name: Shutdown Loopbacks on Core
+      cisco.nxos.nxos_interfaces:
+        config: "{{ if_config }}"
+        state: merged
