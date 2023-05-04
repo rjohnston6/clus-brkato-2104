@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,dotenv,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,dotenv,visualstudiocode
 
+### Certificates ###
+.pem
+
 ### dotenv ###
 .env
 
