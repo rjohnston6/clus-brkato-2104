@@ -1,6 +1,11 @@
 bgp_address_family:
   address_family:
-  - {advertise_l2vpn_evpn: true, afi: ipv4, safi: unicast, vrf: prod}
+  - advertise_l2vpn_evpn: true
+    afi: ipv4
+    maximum_paths:
+      ibgp: {parallel_paths: 2}
+    safi: unicast
+    vrf: prod
   as_number: '65001'
 bgp_global:
   as_number: '65001'

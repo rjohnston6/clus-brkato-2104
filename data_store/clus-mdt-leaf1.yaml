@@ -7,8 +7,6 @@ bgp_address_family:
       parallel_paths: 2
     networks:
     - {prefix: 0.0.0.0/0}
-    redistribute:
-    - {protocol: direct, route_map: DIRECT-FABRIC-RMAP}
     safi: unicast
     vrf: prod
   as_number: '65001'
@@ -19,12 +17,8 @@ bgp_global:
   router_id: 100.64.0.11
   vrfs:
   - neighbors:
-    - {neighbor_address: 172.16.0.1, remote_as: '65010'}
-    - {neighbor_address: 172.16.0.11, remote_as: '65010'}
-    - {neighbor_address: 172.16.0.3, remote_as: '65010'}
-    - {neighbor_address: 172.16.0.5, remote_as: '65010'}
-    - {neighbor_address: 172.16.0.7, remote_as: '65010'}
-    - {neighbor_address: 172.16.0.9, remote_as: '65010'}
+    - {neighbor_address: 172.16.0.1, remote_as: '65010', update_source: Ethernet1/3}
+    - {neighbor_address: 172.16.0.7, remote_as: '65010', update_source: Ethernet1/4}
     vrf: prod
 bgp_neighbor_address_family:
   as_number: '65001'
@@ -37,33 +31,9 @@ bgp_neighbor_address_family:
   vrfs:
   - neighbors:
     - address_family:
-      - afi: ipv4
-        route_map: {outbound: EXTCON-RMAP-FILTER}
-        safi: unicast
+      - {afi: ipv4, safi: unicast}
       neighbor_address: 172.16.0.1
     - address_family:
-      - afi: ipv4
-        route_map: {outbound: EXTCON-RMAP-FILTER}
-        safi: unicast
-      neighbor_address: 172.16.0.11
-    - address_family:
-      - afi: ipv4
-        route_map: {outbound: EXTCON-RMAP-FILTER}
-        safi: unicast
-      neighbor_address: 172.16.0.3
-    - address_family:
-      - afi: ipv4
-        route_map: {outbound: EXTCON-RMAP-FILTER}
-        safi: unicast
-      neighbor_address: 172.16.0.5
-    - address_family:
-      - afi: ipv4
-        route_map: {outbound: EXTCON-RMAP-FILTER}
-        safi: unicast
+      - {afi: ipv4, safi: unicast}
       neighbor_address: 172.16.0.7
-    - address_family:
-      - afi: ipv4
-        route_map: {outbound: EXTCON-RMAP-FILTER}
-        safi: unicast
-      neighbor_address: 172.16.0.9
     vrf: prod
