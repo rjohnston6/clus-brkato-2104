@@ -3,76 +3,25 @@ bgp_address_family:
   - afi: ipv4
     maximum_paths: {parallel_paths: 2}
     redistribute:
-    - {protocol: direct, route_map: PEER1-DIRECT-TO-BGP}
+    - {protocol: direct, route_map: DIRECT-TO-BGP}
     safi: unicast
-    vrf: peer-1
-  - afi: ipv4
-    maximum_paths: {parallel_paths: 2}
-    redistribute:
-    - {protocol: direct, route_map: PEER2-DIRECT-TO-BGP}
-    safi: unicast
-    vrf: peer-2
-  - afi: ipv4
-    maximum_paths: {parallel_paths: 2}
-    redistribute:
-    - {protocol: direct, route_map: PEER3-DIRECT-TO-BGP}
-    safi: unicast
-    vrf: peer-3
   as_number: '65010'
 bgp_global:
   as_number: '65010'
-  vrfs:
-  - neighbors:
-    - {neighbor_address: 172.16.0.0, remote_as: '65001'}
-    - {neighbor_address: 172.16.1.0, remote_as: '65001'}
-    - {neighbor_address: 172.16.2.1, remote_as: '65010'}
-    router_id: 100.65.10.1
-    vrf: peer-1
-  - neighbors:
-    - {neighbor_address: 172.16.0.2, remote_as: '65001'}
-    - {neighbor_address: 172.16.1.2, remote_as: '65001'}
-    - {neighbor_address: 172.16.2.3, remote_as: '65010'}
-    router_id: 100.65.11.1
-    vrf: peer-2
-  - neighbors:
-    - {neighbor_address: 172.16.0.4, remote_as: '65001'}
-    - {neighbor_address: 172.16.1.4, remote_as: '65001'}
-    - {neighbor_address: 172.16.2.5, remote_as: '65010'}
-    router_id: 100.65.12.1
-    vrf: peer-3
+  neighbors:
+  - {neighbor_address: 172.16.0.0, remote_as: '65001', update_source: Ethernet1/1}
+  - {neighbor_address: 172.16.1.0, remote_as: '65001', update_source: Ethernet1/2}
+  - {neighbor_address: 172.16.2.1, remote_as: '65010', update_source: Ethernet1/3}
+  router_id: 100.65.0.1
 bgp_neighbor_address_family:
   as_number: '65010'
-  vrfs:
-  - neighbors:
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.0.0
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.1.0
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.2.1
-    vrf: peer-1
-  - neighbors:
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.0.2
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.1.2
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.2.3
-    vrf: peer-2
-  - neighbors:
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.0.4
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.1.4
-    - address_family:
-      - {afi: ipv4, safi: unicast}
-      neighbor_address: 172.16.2.5
-    vrf: peer-3
+  neighbors:
+  - address_family:
+    - {afi: ipv4, safi: unicast}
+    neighbor_address: 172.16.0.0
+  - address_family:
+    - {afi: ipv4, safi: unicast}
+    neighbor_address: 172.16.1.0
+  - address_family:
+    - {afi: ipv4, safi: unicast}
+    neighbor_address: 172.16.2.1
