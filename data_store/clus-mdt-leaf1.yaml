@@ -12,6 +12,7 @@ bgp_address_family:
   as_number: '65001'
 bgp_global:
   as_number: '65001'
+  log_neighbor_changes: true
   neighbors:
   - {neighbor_address: 100.64.0.1, remote_as: '65001', update_source: loopback0}
   router_id: 100.64.0.11
